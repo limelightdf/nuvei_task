@@ -12,6 +12,7 @@ resource "aws_subnet" "subnet-1" {
   vpc_id            = aws_vpc.prod-vpc.id
   cidr_block        = var.public_subnet_cidr
   availability_zone = var.aws_az
+  subnet_count      = var.subnet_count
 
   tags = {
     Name = "public-subnet"
@@ -22,6 +23,7 @@ resource "aws_subnet" "subnet-2" {
   vpc_id            = aws_vpc.prod-vpc.id
   cidr_block        = var.private_subnet_cidr 
   availability_zone = var.aws_az
+  subnet_count      = var.subnet_count
 
   tags = {
     Name = "private-subnet"
@@ -93,7 +95,7 @@ resource "aws_security_group" "allow_web" {
 
 resource "aws_network_interface" "web-server-nic" {
   subnet_id       = ["aws_subnet.subnet-1.id", "aws_subnet.subnet-2.id"]
-  private_ips     = ["10.0.1.50"]
+  private_ips     = var.private_ips
   security_groups = [aws_security_group.allow_web.id]
 }
 
@@ -102,7 +104,7 @@ resource "aws_network_interface" "web-server-nic" {
 resource "aws_eip" "one" {
   vpc                       = true
   network_interface         = aws_network_interface.web-server-nic.id
-  associate_with_private_ip = "10.0.1.50"
+  associate_with_private_ip = var.private_ips
   depends_on                = [aws_internet_gateway.gw]
  }
 
