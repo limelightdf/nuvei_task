@@ -1,0 +1,5 @@
+# To list of all AWS resources being used in an account per region
+# Run the command line below passing the region name in the command
+# Replace the eu-central-1 in the command with your desire region of query
+
+aws resourcegroupstaggingapi get-resources --region eu-central-1 --output json
